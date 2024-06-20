@@ -5,15 +5,16 @@ import p5 from 'p5';
 import { Cell, Direction, Movement } from './boardTypes';
 import { divideInt, getRandomColor, swap } from './boardUtils';
 
-const ROWS = 3;
+const ROWS = 4;
 const COLS = 4;
-const CELL_DIMENSION = 200;
+const CELL_DIMENSION = 120;
 const TOTAL_CELLS = ROWS * COLS;
 const CANVAS_WIDTH = CELL_DIMENSION * COLS;
 const CANVAS_HEIGHT = CELL_DIMENSION * ROWS;
 
 // TODO: Implement speed based on FPS
-const CELL_SPEED = CELL_DIMENSION / 10;
+const CELL_MIN_SPEED = 3;
+const CELL_SLOW_MULTIPLIER = 5;
 
 const board = (p: p5) => {
   const boardData: (Cell | null)[] =
@@ -68,16 +69,16 @@ const board = (p: p5) => {
     }
 
     if (direction === Direction.Right) {
-      cell.x += destination.x - cell.x < CELL_SPEED ? destination.x - cell.x : CELL_SPEED;
+      cell.x += destination.x - cell.x < CELL_MIN_SPEED ? destination.x - cell.x : (destination.x - cell.x) / CELL_SLOW_MULTIPLIER;
     }
     else if (direction === Direction.Left) {
-      cell.x -= cell.x - destination.x < CELL_SPEED ? cell.x - destination.x : CELL_SPEED;
+      cell.x -= cell.x - destination.x < CELL_MIN_SPEED ? cell.x - destination.x : (cell.x - destination.x) / CELL_SLOW_MULTIPLIER;
     }
     else if (direction === Direction.Up) {
-      cell.y -= cell.y - destination.y < CELL_SPEED ? cell.y - destination.y : CELL_SPEED;
+      cell.y -= cell.y - destination.y < CELL_MIN_SPEED ? cell.y - destination.y : (cell.y - destination.y) / CELL_SLOW_MULTIPLIER;
     }
     else if (direction === Direction.Down) {
-      cell.y += destination.y - cell.y < CELL_SPEED ? destination.y - cell.y : CELL_SPEED;
+      cell.y += destination.y - cell.y < CELL_MIN_SPEED ? destination.y - cell.y : (destination.y - cell.y) / CELL_SLOW_MULTIPLIER;
     }
   }
 
@@ -99,7 +100,7 @@ const board = (p: p5) => {
           CELL_DIMENSION, CELL_DIMENSION
         )
       p.fill(255);
-      p.text(cell.id, cell.x + CELL_DIMENSION / 2, cell.y + CELL_DIMENSION / 2);
+      p.text(cell.id, cell.x + CELL_DIMENSION / 2 - CELL_DIMENSION / 20, cell.y + CELL_DIMENSION / 2);
     });
 
     handleMovementQueue();
