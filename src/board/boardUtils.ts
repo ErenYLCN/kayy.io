@@ -1,5 +1,3 @@
-import { Cell, Direction } from "./boardTypes";
-
 function divideInt(a: number, b: number) { return Math.floor(a / b) };
 
 function swap(arr: any[], i: number, j: number) {
@@ -8,4 +6,8 @@ function swap(arr: any[], i: number, j: number) {
   arr[j] = temp;
 }
 
-export { divideInt, swap };
+function getRandomColor() {
+  return [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+}
+
+export { divideInt, swap, getRandomColor };

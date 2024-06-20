@@ -18,7 +18,14 @@ const P5Wrapper: React.FC<P5WrapperProps> = ({ board }) => {
     };
   }, [board]);
 
-  return <div id={"canvas-wrapper"} ref={boardRef}></div>;
+  return (
+    <div
+      style={{ padding: "12px", backgroundColor: "#000" }}
+      className={"rounded-lg overflow-hidden p-6"}
+    >
+      <div id={"canvas-wrapper"} ref={boardRef} />
+    </div>
+  );
 };
 
 export default P5Wrapper;

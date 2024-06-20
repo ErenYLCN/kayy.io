@@ -3,7 +3,7 @@
 import p5 from 'p5';
 
 import { Cell, Direction, Movement } from './boardTypes';
-import { divideInt, swap } from './boardUtils';
+import { divideInt, getRandomColor, swap } from './boardUtils';
 
 const ROWS = 3;
 const COLS = 4;
@@ -11,6 +11,8 @@ const CELL_DIMENSION = 200;
 const TOTAL_CELLS = ROWS * COLS;
 const CANVAS_WIDTH = CELL_DIMENSION * COLS;
 const CANVAS_HEIGHT = CELL_DIMENSION * ROWS;
+
+// TODO: Implement speed based on FPS
 const CELL_SPEED = CELL_DIMENSION / 10;
 
 const board = (p: p5) => {
@@ -22,7 +24,8 @@ const board = (p: p5) => {
           {
             id,
             x: (id % COLS) * CELL_DIMENSION,
-            y: (divideInt(id, COLS)) * CELL_DIMENSION
+            y: (divideInt(id, COLS)) * CELL_DIMENSION,
+            color: getRandomColor(),
           } as Cell
         )
       ),
@@ -65,51 +68,38 @@ const board = (p: p5) => {
     }
 
     if (direction === Direction.Right) {
-      if (destination.x - cell.x < CELL_SPEED) {
-        cell.x = destination.x;
-        return;
-      }
-      cell.x += CELL_SPEED;
+      cell.x += destination.x - cell.x < CELL_SPEED ? destination.x - cell.x : CELL_SPEED;
     }
     else if (direction === Direction.Left) {
-      if (cell.x - destination.x < CELL_SPEED) {
-        cell.x = destination.x;
-        return;
-      }
-      cell.x -= CELL_SPEED;
+      cell.x -= cell.x - destination.x < CELL_SPEED ? cell.x - destination.x : CELL_SPEED;
     }
     else if (direction === Direction.Up) {
-      if (cell.y - destination.y < CELL_SPEED) {
-        cell.y = destination.y;
-        return;
-      }
-      cell.y -= CELL_SPEED;
+      cell.y -= cell.y - destination.y < CELL_SPEED ? cell.y - destination.y : CELL_SPEED;
     }
     else if (direction === Direction.Down) {
-      if (destination.y - cell.y < CELL_SPEED) {
-        cell.y = destination.y;
-        return;
-      }
-      cell.y += CELL_SPEED;
+      cell.y += destination.y - cell.y < CELL_SPEED ? destination.y - cell.y : CELL_SPEED;
     }
   }
 
   p.setup = () => {
     p.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    console.log(boardData);
   };
 
   p.draw = () => {
-    p.background(200);
-    p.fill(255, 0, 0);
+    p.background(0);
+    p.strokeWeight(2);
     boardData.forEach((cell, _index) => {
       if (cell === null) return;
+      p.fill(...cell.color);
+      p.stroke(200);
       p.rect
         (
           cell.x,
           cell.y,
           CELL_DIMENSION, CELL_DIMENSION
         )
+      p.fill(255);
+      p.text(cell.id, cell.x + CELL_DIMENSION / 2, cell.y + CELL_DIMENSION / 2);
     });
 
     handleMovementQueue();

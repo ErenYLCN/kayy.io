@@ -2,6 +2,7 @@ export type Cell = {
   id: number;
   x: number;
   y: number;
+  color: [number, number, number];
 }
 
 export type Movement = {
