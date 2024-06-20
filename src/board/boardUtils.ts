@@ -10,13 +10,14 @@ function getRandomColor() {
   return [Math.random() * 255, Math.random() * 255, Math.random() * 255];
 }
 
-function slidePuzzleShuffle(array: any[], numberOfCols: number) {
+function slidePuzzleShuffle(arr: any[], numberOfCols: number) {
   /* This shuffle must be special in order to ensure that
    * the puzzle is solvable.
    * see:
    * https://www.cs.princeton.edu/courses/archive/spring21/cos226/assignments/8puzzle/specification.php#:~:text=Thus%2C%20if%20a%20board%20has,inversions%2C%20then%20it%20is%20solvable.
    * */
-  let currentIndex = array.length;
+  let arrCopy = arr.slice();
+  let currentIndex = arrCopy.length;
 
   // First do a normal Fisher-Yates shuffle
   while (currentIndex != 0) {
@@ -25,25 +26,25 @@ function slidePuzzleShuffle(array: any[], numberOfCols: number) {
     let randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
-    swap(array, currentIndex, randomIndex);
+    swap(arrCopy, currentIndex, randomIndex);
   }
 
-  if (isOdd(array.length)) {
+  if (isOdd(arrCopy.length)) {
     // If the puzzle is odd numbered, inversions must be even
-    var inversions = countInversions(array);
+    var inversions = countInversions(arrCopy);
     if (isOdd(inversions)) {
-      removeFirstInversion(array);
+      removeFirstInversion(arrCopy);
     }
   }
   else {
     // If the puzzle is even numbered, inversions + row of the blank square must be odd
-    var inversions = countInversions(array);
-    if (isEven(inversions + divideInt(array.indexOf(null), numberOfCols))) {
-      inversions === 0 ? addOneInversion(array) : removeFirstInversion(array);
+    var inversions = countInversions(arrCopy);
+    if (isEven(inversions + divideInt(arrCopy.indexOf(null), numberOfCols))) {
+      inversions === 0 ? addOneInversion(arrCopy) : removeFirstInversion(arrCopy);
     }
   }
 
-  return array;
+  return arrCopy;
 }
 
 function countInversions(array: any[]) {
