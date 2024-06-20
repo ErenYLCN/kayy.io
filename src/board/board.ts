@@ -11,6 +11,7 @@ const CELL_DIMENSION = 200;
 const TOTAL_CELLS = ROWS * COLS;
 const CANVAS_WIDTH = CELL_DIMENSION * COLS;
 const CANVAS_HEIGHT = CELL_DIMENSION * ROWS;
+const CELL_SPEED = CELL_DIMENSION / 10;
 
 const board = (p: p5) => {
   const boardData: (Cell | null)[] =
@@ -64,16 +65,32 @@ const board = (p: p5) => {
     }
 
     if (direction === Direction.Right) {
-      cell.x += 20;
+      if (destination.x - cell.x < CELL_SPEED) {
+        cell.x = destination.x;
+        return;
+      }
+      cell.x += CELL_SPEED;
     }
     else if (direction === Direction.Left) {
-      cell.x -= 20;
+      if (cell.x - destination.x < CELL_SPEED) {
+        cell.x = destination.x;
+        return;
+      }
+      cell.x -= CELL_SPEED;
     }
     else if (direction === Direction.Up) {
-      cell.y -= 20;
+      if (cell.y - destination.y < CELL_SPEED) {
+        cell.y = destination.y;
+        return;
+      }
+      cell.y -= CELL_SPEED;
     }
     else if (direction === Direction.Down) {
-      cell.y += 20;
+      if (destination.y - cell.y < CELL_SPEED) {
+        cell.y = destination.y;
+        return;
+      }
+      cell.y += CELL_SPEED;
     }
   }
 
@@ -99,7 +116,8 @@ const board = (p: p5) => {
   };
 
   p.keyPressed = () => {
-    console.log(movementQueue)
+    if (movementQueue.length > 0) return;
+
     switch (p.keyCode) {
       case p.LEFT_ARROW:
         var cell = boardData[nullIndex + 1];
