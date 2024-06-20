@@ -3,10 +3,10 @@
 import p5 from 'p5';
 
 import { Cell, Direction, Movement } from './boardTypes';
-import { divideInt, getRandomColor, swap } from './boardUtils';
+import { divideInt, getRandomColor, swap, slidePuzzleShuffle } from './boardUtils';
 
-const ROWS = 4;
-const COLS = 4;
+const ROWS = 3;
+const COLS = 3;
 const CELL_DIMENSION = 120;
 const TOTAL_CELLS = ROWS * COLS;
 const CANVAS_WIDTH = CELL_DIMENSION * COLS;
@@ -17,22 +17,24 @@ const CELL_MIN_SPEED = 3;
 const CELL_SLOW_MULTIPLIER = 5;
 
 const board = (p: p5) => {
-  const boardData: (Cell | null)[] =
-    [
-      ...Array.from(
-        { length: TOTAL_CELLS - 1 },
-        (_, id) => (
-          {
-            id,
-            x: (id % COLS) * CELL_DIMENSION,
-            y: (divideInt(id, COLS)) * CELL_DIMENSION,
-            color: getRandomColor(),
-          } as Cell
-        )
-      ),
-      null
-    ];
-  let nullIndex = TOTAL_CELLS - 1;
+  const solution = [...Array.from({ length: TOTAL_CELLS - 1 }, (_, id) => id), null];
+  const randomizedBoardData = slidePuzzleShuffle(solution, COLS);
+
+  const boardData: (Cell | null)[] = randomizedBoardData.map((id, index) => {
+    if (id === null) return null;
+
+    const x = (index % COLS) * CELL_DIMENSION;
+    const y = divideInt(index, COLS) * CELL_DIMENSION;
+
+    return {
+      id,
+      x,
+      y,
+      color: getRandomColor()
+    } as Cell;
+  });
+
+  let nullIndex = boardData.findIndex(cell => cell === null);
 
   let movementQueue: Movement[] = []
 
