@@ -20,6 +20,8 @@ For the slider puzzle to be solvable:
 - If the puzzle has an odd number of cells, the number of inversions must be even.
 - If the puzzle has an even number of cells, the sum of the number of inversions and the row index of the empty cell (starting from 1) must be odd.
 
+For more information about this, check this [link](https://www.cs.princeton.edu/courses/archive/spring21/cos226/assignments/8puzzle/specification.php)
+
 ### Inversions
 
 An inversion is a situation where a higher-numbered tile precedes a lower-numbered tile when considering the puzzle in a single row (ignoring the empty cell). The puzzle is considered solvable if it meets the above rules for inversions based on the total number of cells.
