@@ -16,17 +16,20 @@ interface GameProps {
 }
 
 function Game({ sketch, rows = 3, cellWidth = 120, onWin }: GameProps) {
+  const realCellWidth =
+    window.innerWidth < 640 ? window.innerWidth / 3 - 20 : cellWidth;
+  console.log(window.innerWidth);
   const sketchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const p5Instance = new p5(
-      sketch(rows, cellWidth, onWin),
+      sketch(rows, realCellWidth, onWin),
       sketchRef.current as HTMLElement,
     );
     return () => {
       p5Instance.remove();
     };
-  }, [sketch, rows, cellWidth, onWin]);
+  }, [sketch, rows, onWin, realCellWidth]);
 
   return (
     <div
