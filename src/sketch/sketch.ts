@@ -44,6 +44,12 @@ const sketch = (rows: number, cellWidth: number, onWin: () => void) => {
 
     let movementQueue: Movement[] = [];
 
+    let clickedCell = {
+      cell: null as Cell | null,
+      x: 0,
+      y: 0,
+    }
+
     let gameWon = false;
 
     function handleMovementQueue() {
@@ -128,33 +134,131 @@ const sketch = (rows: number, cellWidth: number, onWin: () => void) => {
     p.keyPressed = () => {
       if (movementQueue.length > 0) return;
 
-      switch (p.keyCode) {
-        case p.LEFT_ARROW:
-          var cell = boardData[nullIndex + 1];
-          if (nullIndex % COLS !== COLS - 1 && cell !== null) {
-            movementQueue.push({ cell, destination: { x: cell.x - CELL_DIMENSION, y: cell.y }, direction: Direction.Left });
-          }
-          break;
-        case p.RIGHT_ARROW:
-          var cell = boardData[nullIndex - 1];
-          if (nullIndex % COLS !== 0 && cell !== null) {
-            movementQueue.push({ cell, destination: { x: cell.x + CELL_DIMENSION, y: cell.y }, direction: Direction.Right });
-          }
-          break;
-        case p.UP_ARROW:
-          var cell = boardData[nullIndex + COLS];
-          if (divideInt(nullIndex, COLS) !== ROWS - 1 && cell !== null) {
-            movementQueue.push({ cell, destination: { x: cell.x, y: cell.y - CELL_DIMENSION }, direction: Direction.Up });
-          }
-          break;
-        case p.DOWN_ARROW:
-          var cell = boardData[nullIndex - COLS];
-          if (divideInt(nullIndex, COLS) !== 0 && cell !== null) {
-            movementQueue.push({ cell, destination: { x: cell.x, y: cell.y + CELL_DIMENSION }, direction: Direction.Down });
-          }
-          break;
+      if (p.keyCode === p.LEFT_ARROW || p.key === 'a') {
+        var cell = boardData[nullIndex + 1];
+        if (nullIndex % COLS !== COLS - 1 && cell !== null) {
+          movementQueue.push({ cell, destination: { x: cell.x - CELL_DIMENSION, y: cell.y }, direction: Direction.Left });
+        }
+      }
+      // TODO: "d" does not work for chrome, investigate
+      else if (p.keyCode === p.RIGHT_ARROW || p.key === 'd') {
+        var cell = boardData[nullIndex - 1];
+        if (nullIndex % COLS !== 0 && cell !== null) {
+          movementQueue.push({ cell, destination: { x: cell.x + CELL_DIMENSION, y: cell.y }, direction: Direction.Right });
+        }
+      }
+      else if (p.keyCode === p.UP_ARROW || p.key === 'w') {
+        var cell = boardData[nullIndex + COLS];
+        if (divideInt(nullIndex, COLS) !== ROWS - 1 && cell !== null) {
+          movementQueue.push({ cell, destination: { x: cell.x, y: cell.y - CELL_DIMENSION }, direction: Direction.Up });
+        }
+      }
+      else if (p.keyCode === p.DOWN_ARROW || p.key === 's') {
+        var cell = boardData[nullIndex - COLS];
+        if (divideInt(nullIndex, COLS) !== 0 && cell !== null) {
+          movementQueue.push({ cell, destination: { x: cell.x, y: cell.y + CELL_DIMENSION }, direction: Direction.Down });
+        }
       }
     };
+
+    //do it for mousedown
+    p.mousePressed = () => {
+      if (movementQueue.length > 0) return;
+
+      const x = p.mouseX;
+      const y = p.mouseY;
+
+      const clickedCellIndex = boardData.findIndex(cell => {
+        if (cell === null) return false;
+        return x >= cell.x && x <= cell.x + CELL_DIMENSION && y >= cell.y && y <= cell.y + CELL_DIMENSION;
+      });
+
+      if (clickedCellIndex === -1) return;
+
+      clickedCell = {
+        cell: boardData[clickedCellIndex],
+        x,
+        y,
+      };
+    }
+
+    p.mouseDragged = () => {
+      const threshold = CELL_DIMENSION / 4;
+
+      if (clickedCell.cell === null) return;
+
+      const { x, y } = clickedCell;
+
+      // push to movement queue based on direction
+      if (p.mouseX - x > threshold) {
+        var cell = boardData[nullIndex - 1];
+        if (nullIndex % COLS !== 0 && cell !== null) {
+          movementQueue.push({ cell, destination: { x: cell.x + CELL_DIMENSION, y: cell.y }, direction: Direction.Right });
+          clickedCell = {
+            cell: null,
+            x: 0,
+            y: 0,
+          }
+          return;
+        }
+      }
+      else if (x - p.mouseX > threshold) {
+        var cell = boardData[nullIndex + 1];
+        if (nullIndex % COLS !== COLS - 1 && cell !== null) {
+          movementQueue.push({ cell, destination: { x: cell.x - CELL_DIMENSION, y: cell.y }, direction: Direction.Left });
+          clickedCell = {
+            cell: null,
+            x: 0,
+            y: 0,
+          }
+          return;
+        }
+      }
+      else if (p.mouseY - y > threshold) {
+        var cell = boardData[nullIndex - COLS];
+        if (divideInt(nullIndex, COLS) !== 0 && cell !== null) {
+          movementQueue.push({ cell, destination: { x: cell.x, y: cell.y + CELL_DIMENSION }, direction: Direction.Down });
+          clickedCell = {
+            cell: null,
+            x: 0,
+            y: 0,
+          }
+          return;
+        }
+      }
+      else if (y - p.mouseY > threshold) {
+        var cell = boardData[nullIndex + COLS];
+        if (divideInt(nullIndex, COLS) !== ROWS - 1 && cell !== null) {
+          movementQueue.push({ cell, destination: { x: cell.x, y: cell.y - CELL_DIMENSION }, direction: Direction.Up });
+          clickedCell = {
+            cell: null,
+            x: 0,
+            y: 0,
+          }
+          return;
+        }
+      }
+    }
+
+    p.mouseReleased = () => {
+      clickedCell = {
+        cell: null,
+        x: 0,
+        y: 0,
+      }
+    }
+
+    p.touchStarted = () => {
+      p.mousePressed();
+    }
+
+    p.touchMoved = () => {
+      p.mouseDragged();
+    }
+
+    p.touchEnded = () => {
+      p.mouseReleased();
+    }
   }
 };
 
