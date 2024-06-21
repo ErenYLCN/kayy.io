@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# kayy-io
 
-## Getting Started
+This is a simple slider puzzle project built using Next.js 14 and p5.js. The puzzle ensures solvability based on the number of cells and inversions.
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Introduction](#introduction)
+- [Solvability Rules](#solvability-rules)
+- [Technologies Used](#technologies-used)
+- [Contributing](#contributing)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Introduction
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+kayy-io is a simple slider puzzle game. The puzzle is rendered using p5.js, and the project is structured with Next.js 14. The puzzle is always solvable based on specific rules regarding the number of inversions and the position of the empty cell.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Solvability Rules
 
-## Learn More
+For the slider puzzle to be solvable:
 
-To learn more about Next.js, take a look at the following resources:
+- If the puzzle has an odd number of cells, the number of inversions must be even.
+- If the puzzle has an even number of cells, the sum of the number of inversions and the row index of the empty cell (starting from 1) must be odd.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Inversions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+An inversion is a situation where a higher-numbered tile precedes a lower-numbered tile when considering the puzzle in a single row (ignoring the empty cell). The puzzle is considered solvable if it meets the above rules for inversions based on the total number of cells.
 
-## Deploy on Vercel
+## Technologies Used
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [Next.js 14](https://nextjs.org/)
+- [p5.js](https://p5js.org/)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contributing
+
+Contributions are welcome! Please fork the repository and create a pull request with your changes. Ensure that your code adheres to the project's coding standards and includes appropriate tests.
