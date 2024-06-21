@@ -1,7 +1,13 @@
 "use client";
 
-import Game from "@/component/Game";
+import dynamic from "next/dynamic";
+
 import sketch from "@/sketch/sketch";
+
+const Game = dynamic(() => import("@/component/Game"), {
+  ssr: false,
+  loading: () => <p>{"Loading..."}</p>,
+});
 
 export default function Home() {
   return (
