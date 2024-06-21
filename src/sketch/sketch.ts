@@ -2,8 +2,11 @@
 
 import p5 from 'p5';
 
+import { swapElements } from '@/core/util/arrayUtils';
+import { divideInt } from '@/core/util/numberUtils';
+
 import { Cell, Direction, Movement } from './sketchTypes';
-import { divideInt, getRandomColor, swap, slidePuzzleShuffle } from './sketchUtils';
+import { getRandomColor, slidePuzzleShuffle } from './sketchUtils';
 
 
 
@@ -23,7 +26,7 @@ const sketch = (rows: number, cellWidth: number, onWin: () => void) => {
     const solution = [...Array.from({ length: TOTAL_CELLS - 1 }, (_, id) => id), null];
     const randomizedBoardData = slidePuzzleShuffle(solution, COLS);
 
-    const boardData: (Cell | null)[] = randomizedBoardData.map((id, index) => {
+    let boardData: (Cell | null)[] = randomizedBoardData.map((id, index) => {
       if (id === null) return null;
 
       const x = (index % COLS) * CELL_DIMENSION;
@@ -60,19 +63,19 @@ const sketch = (rows: number, cellWidth: number, onWin: () => void) => {
       if (cell.x === destination.x && cell.y === destination.y) {
         switch (direction) {
           case Direction.Right:
-            swap(boardData, nullIndex, nullIndex - 1);
+            boardData = swapElements(boardData, nullIndex, nullIndex - 1);
             nullIndex -= 1;
             break;
           case Direction.Left:
-            swap(boardData, nullIndex, nullIndex + 1);
+            boardData = swapElements(boardData, nullIndex, nullIndex + 1);
             nullIndex += 1;
             break;
           case Direction.Up:
-            swap(boardData, nullIndex, nullIndex + COLS);
+            boardData = swapElements(boardData, nullIndex, nullIndex + COLS);
             nullIndex += COLS;
             break;
           case Direction.Down:
-            swap(boardData, nullIndex, nullIndex - COLS);
+            boardData = swapElements(boardData, nullIndex, nullIndex - COLS);
             nullIndex -= COLS;
             break;
         }

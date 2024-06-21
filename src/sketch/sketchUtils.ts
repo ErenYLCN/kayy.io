@@ -1,11 +1,6 @@
+import { swapElements } from "@/core/util/arrayUtils";
 import { divideInt, isEven, isOdd } from "@/core/util/numberUtils";
 
-
-function swap(arr: any[], i: number, j: number) {
-  const temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp;
-}
 
 function getRandomColor() {
   return [Math.random() * 255, Math.random() * 255, Math.random() * 255];
@@ -27,21 +22,21 @@ function slidePuzzleShuffle(arr: any[], numberOfCols: number) {
     let randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
-    swap(arrCopy, currentIndex, randomIndex);
+    arrCopy = swapElements(arrCopy, currentIndex, randomIndex);
   }
 
   if (isOdd(arrCopy.length)) {
     // If the puzzle is odd numbered, inversions must be even
     var inversions = countInversions(arrCopy);
     if (isOdd(inversions)) {
-      removeFirstInversion(arrCopy);
+      arrCopy = removeFirstInversion(arrCopy);
     }
   }
   else {
     // If the puzzle is even numbered, inversions + row of the blank square must be odd
     var inversions = countInversions(arrCopy);
     if (isEven(inversions + divideInt(arrCopy.indexOf(null), numberOfCols))) {
-      inversions === 0 ? addOneInversion(arrCopy) : removeFirstInversion(arrCopy);
+      arrCopy = inversions === 0 ? addOneInversion(arrCopy) : removeFirstInversion(arrCopy);
     }
   }
 
@@ -65,34 +60,41 @@ function countInversions(array: any[]) {
   return inversions;
 }
 
-function removeFirstInversion(array: any[]) {
-  for (let i = 0; i < array.length; i++) {
-    for (let j = i + 1; j < array.length; j++) {
-      if (array[j] === null) continue;
-      if (array[i] === null) continue;
+function removeFirstInversion(arr: any[]) {
+  let arrCopy = arr.slice();
 
-      if (array[i] > array[j]) {
-        swap(array, i, j);
-        return;
+  for (let i = 0; i < arrCopy.length; i++) {
+    for (let j = i + 1; j < arrCopy.length; j++) {
+      if (arrCopy[j] === null) continue;
+      if (arrCopy[i] === null) continue;
+
+      if (arrCopy[i] > arrCopy[j]) {
+        arrCopy = swapElements(arrCopy, i, j);
+        return arrCopy;
       }
     }
   }
+
+  return arrCopy;
 }
 
-function addOneInversion(array: any[]) {
-  for (let i = 0; i < array.length; i++) {
-    for (let j = i + 1; j < array.length; j++) {
-      if (array[j] === null) continue;
-      if (array[i] === null) continue;
+function addOneInversion(arr: any[]) {
+  let arrCopy = arr.slice();
+  for (let i = 0; i < arrCopy.length; i++) {
+    for (let j = i + 1; j < arrCopy.length; j++) {
+      if (arrCopy[j] === null) continue;
+      if (arrCopy[i] === null) continue;
 
-      if (array[i] < array[j]) {
-        swap(array, i, j);
-        return;
+      if (arrCopy[i] < arrCopy[j]) {
+        arrCopy = swapElements(arrCopy, i, j);
+        return arrCopy;
       }
     }
   }
+
+  return arrCopy;
 }
 
 
 
-export { swap, getRandomColor, slidePuzzleShuffle, countInversions, removeFirstInversion, addOneInversion };
+export { getRandomColor, slidePuzzleShuffle, countInversions, removeFirstInversion, addOneInversion };
