@@ -4,8 +4,8 @@ import React, { useRef, useEffect } from "react";
 
 import p5 from "p5";
 
-interface P5WrapperProps {
-  board: (
+interface GameProps {
+  sketch: (
     rows: number,
     cellWidth: number,
     onWin: () => void,
@@ -15,32 +15,27 @@ interface P5WrapperProps {
   onWin: () => void;
 }
 
-const P5Wrapper: React.FC<P5WrapperProps> = ({
-  board,
-  rows = 3,
-  cellWidth = 120,
-  onWin,
-}) => {
-  const boardRef = useRef<HTMLDivElement>(null);
+function Game({ sketch, rows = 3, cellWidth = 120, onWin }: GameProps) {
+  const sketchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const p5Instance = new p5(
-      board(rows, cellWidth, onWin),
-      boardRef.current as HTMLElement,
+      sketch(rows, cellWidth, onWin),
+      sketchRef.current as HTMLElement,
     );
     return () => {
       p5Instance.remove();
     };
-  }, [board, rows, cellWidth, onWin]);
+  }, [sketch, rows, cellWidth, onWin]);
 
   return (
     <div
       style={{ padding: "12px", backgroundColor: "#000" }}
       className={"rounded-lg overflow-hidden p-6"}
     >
-      <div id={"canvas-wrapper"} ref={boardRef} />
+      <div id={"canvas-wrapper"} ref={sketchRef} />
     </div>
   );
-};
+}
 
-export default P5Wrapper;
+export default Game;

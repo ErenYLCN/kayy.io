@@ -2,14 +2,12 @@
 
 import p5 from 'p5';
 
-import { Cell, Direction, Movement } from './boardTypes';
-import { divideInt, getRandomColor, swap, slidePuzzleShuffle } from './boardUtils';
+import { Cell, Direction, Movement } from './sketchTypes';
+import { divideInt, getRandomColor, swap, slidePuzzleShuffle } from './sketchUtils';
 
-// TODO: Implement speed based on FPS
-const CELL_MIN_SPEED = 3;
-const CELL_SLOW_MULTIPLIER = 5;
 
-const board = (rows: number, cellWidth: number, onWin: () => void) => {
+
+const sketch = (rows: number, cellWidth: number, onWin: () => void) => {
   return (p: p5) => {
     const ROWS = rows;
     const COLS = ROWS;
@@ -17,6 +15,10 @@ const board = (rows: number, cellWidth: number, onWin: () => void) => {
     const TOTAL_CELLS = ROWS * COLS;
     const CANVAS_WIDTH = CELL_DIMENSION * COLS;
     const CANVAS_HEIGHT = CELL_DIMENSION * ROWS;
+
+    // TODO: Implement speed based on FPS
+    const CELL_MIN_SPEED = 3;
+    const CELL_SLOW_MULTIPLIER = 5;
 
     const solution = [...Array.from({ length: TOTAL_CELLS - 1 }, (_, id) => id), null];
     const randomizedBoardData = slidePuzzleShuffle(solution, COLS);
@@ -153,4 +155,4 @@ const board = (rows: number, cellWidth: number, onWin: () => void) => {
   }
 };
 
-export default board;
+export default sketch;

@@ -1,4 +1,5 @@
-function divideInt(a: number, b: number) { return Math.floor(a / b) };
+import { divideInt, isEven, isOdd } from "@/core/util/numberUtils";
+
 
 function swap(arr: any[], i: number, j: number) {
   const temp = arr[i];
@@ -92,12 +93,6 @@ function addOneInversion(array: any[]) {
   }
 }
 
-function isOdd(num: number) {
-  return num % 2 === 1;
-}
 
-function isEven(num: number) {
-  return num % 2 === 0;
-}
 
-export { divideInt, swap, getRandomColor, slidePuzzleShuffle, countInversions, removeFirstInversion, addOneInversion, isOdd, isEven };
+export { swap, getRandomColor, slidePuzzleShuffle, countInversions, removeFirstInversion, addOneInversion };
