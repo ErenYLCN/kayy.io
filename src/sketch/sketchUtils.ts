@@ -1,17 +1,21 @@
 import { swapElements } from "@/core/util/arrayUtils";
 import { divideInt, isEven, isOdd } from "@/core/util/numberUtils";
 
-
+/**
+ * Returns a random color in the form of an array of RGB values.
+ */
 function getRandomColor() {
   return [Math.random() * 255, Math.random() * 255, Math.random() * 255];
 }
 
-function slidePuzzleShuffle(arr: any[], numberOfCols: number) {
-  /* This shuffle must be special in order to ensure that
-   * the puzzle is solvable.
-   * see:
-   * https://www.cs.princeton.edu/courses/archive/spring21/cos226/assignments/8puzzle/specification.php#:~:text=Thus%2C%20if%20a%20board%20has,inversions%2C%20then%20it%20is%20solvable.
-   * */
+/**
+ * Shuffles the puzzle in a way that ensures it is solvable.
+ * for more information on slide puzzle solvability see:
+ * https://www.cs.princeton.edu/courses/archive/spring21/cos226/assignments/8puzzle/specification.php#:~:text=Thus%2C%20if%20a%20board%20has,inversions%2C%20then%20it%20is%20solvable.
+ * @param {any[]} arr - The array to shuffle
+ * @param {number | null} numberOfCols - The number of columns in the puzzle
+ */
+function slidePuzzleShuffle(arr: (number | null)[], numberOfCols: number) {
   let arrCopy = arr.slice();
   let currentIndex = arrCopy.length;
 
@@ -26,7 +30,7 @@ function slidePuzzleShuffle(arr: any[], numberOfCols: number) {
   }
 
   if (isOdd(arrCopy.length)) {
-    // If the puzzle is odd numbered, inversions must be even
+    // If the puzzle is odd numbered, number of inversions must be even
     var inversions = countInversions(arrCopy);
     if (isOdd(inversions)) {
       arrCopy = removeFirstInversion(arrCopy);
@@ -43,7 +47,12 @@ function slidePuzzleShuffle(arr: any[], numberOfCols: number) {
   return arrCopy;
 }
 
-function countInversions(array: any[]) {
+/**
+ * Counts the number of inversion in an array.
+ * An inversion is when a larger number comes before a smaller number.
+ * @param {(number | null)[]} array - The array to count inversions in
+ */
+function countInversions(array: (number | null)[]) {
   let inversions = 0;
 
   for (let i = 0; i < array.length; i++) {
@@ -51,7 +60,7 @@ function countInversions(array: any[]) {
       if (array[j] === null) continue;
       if (array[i] === null) continue;
 
-      if (array[i] > array[j]) {
+      if (array[i]! > array[j]!) {
         inversions++;
       }
     }
@@ -60,7 +69,11 @@ function countInversions(array: any[]) {
   return inversions;
 }
 
-function removeFirstInversion(arr: any[]) {
+/**
+ * Removes the first inversion in an array.
+ * @param {(number | null)[]} arr - The array to remove the first inversion from
+ */
+function removeFirstInversion(arr: (number | null)[]) {
   let arrCopy = arr.slice();
 
   for (let i = 0; i < arrCopy.length; i++) {
@@ -68,7 +81,7 @@ function removeFirstInversion(arr: any[]) {
       if (arrCopy[j] === null) continue;
       if (arrCopy[i] === null) continue;
 
-      if (arrCopy[i] > arrCopy[j]) {
+      if (arrCopy[i]! > arrCopy[j]!) {
         arrCopy = swapElements(arrCopy, i, j);
         return arrCopy;
       }
@@ -78,14 +91,18 @@ function removeFirstInversion(arr: any[]) {
   return arrCopy;
 }
 
-function addOneInversion(arr: any[]) {
+/**
+ * Adds one inversion to an array.
+ * @param {(number | null)[]} arr - The array to add an inversion to
+ */
+function addOneInversion(arr: (number | null)[]) {
   let arrCopy = arr.slice();
   for (let i = 0; i < arrCopy.length; i++) {
     for (let j = i + 1; j < arrCopy.length; j++) {
       if (arrCopy[j] === null) continue;
       if (arrCopy[i] === null) continue;
 
-      if (arrCopy[i] < arrCopy[j]) {
+      if (arrCopy[i]! < arrCopy[j]!) {
         arrCopy = swapElements(arrCopy, i, j);
         return arrCopy;
       }
