@@ -1,5 +1,3 @@
-"use client";
-
 import dynamic from "next/dynamic";
 
 import sketch from "@/sketch/sketch";
@@ -23,11 +21,7 @@ export default function Home() {
         </a>
       </h1>
 
-      <Game sketch={sketch} rows={3} cellWidth={160} onWin={handleWin} />
+      <Game sketch={sketch} rows={3} cellWidth={160} />
     </main>
   );
-
-  function handleWin() {
-    alert("You won!");
-  }
 }

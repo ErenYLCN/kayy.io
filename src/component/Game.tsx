@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 
 import p5 from "p5";
 
@@ -12,13 +12,16 @@ interface GameProps {
   ) => (p: p5) => void;
   rows?: number;
   cellWidth?: number;
-  onWin: () => void;
 }
 
-function Game({ sketch, rows = 3, cellWidth = 120, onWin }: GameProps) {
+function Game({ sketch, rows = 3, cellWidth = 120 }: GameProps) {
   const realCellWidth =
     window.innerWidth < 640 ? window.innerWidth / 3 - 20 : cellWidth;
   const sketchRef = useRef<HTMLDivElement>(null);
+
+  const onWin = useCallback(() => {
+    alert("You won!");
+  }, []);
 
   useEffect(() => {
     const p5Instance = new p5(
